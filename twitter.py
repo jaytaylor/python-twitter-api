@@ -2647,21 +2647,21 @@ class Api(object):
         The twitter.Api instance must be authenticated.
 
         Args:
-          since_id:
-            Returns only public statuses with an ID greater than (that is,
-            more recent than) the specified ID. [optional]
-          max_id:
-            Returns only statuses with an ID less than (that is, older
-            than) or equal to the specified ID. [optional]
-          count:
-            Specifies the number of statuses to retrieve. May not be
-            greater than 200.  [optional]
-          page:
-             Specifies the page of results to retrieve. Note: there are
-             pagination limits. [optional]
+            since_id:
+                Returns only public statuses with an ID greater than (that is,
+                more recent than) the specified ID. [optional]
+            max_id:
+                Returns only statuses with an ID less than (that is, older
+                than) or equal to the specified ID. [optional]
+            count:
+                Specifies the number of statuses to retrieve. May not be
+                greater than 200.  [optional]
+            page:
+                 Specifies the page of results to retrieve. Note: there are
+                 pagination limits. [optional]
 
         Returns:
-          A sequence of Status instances, one for each message up to count
+            A sequence of Status instances, one for each message up to count
         '''
         parameters = {}
         if not self._oauth_consumer:
