@@ -2495,6 +2495,11 @@ class Api(object):
                 parameters['page'] = int(page)
             except ValueError:
                 raise TwitterError("'page' must be an integer")
+        if max_id:
+            try:
+                parameters['max_id'] = int(max_id)
+            except ValueError:
+                raise TwitterError("'max_id' must be an integer")
         if since_id:
             parameters['since_id'] = since_id
         if retweets:
