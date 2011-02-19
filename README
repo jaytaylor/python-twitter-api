@@ -1,7 +1,9 @@
 This project is a fork of http://code.google.com/p/python-twitter/, which improvements and enhancements.
 
 Features:
-    -Automatically retrieve OAuth tokens programmatically, without the user having to visit Twitter.com.
+    -Automatically retrieve OAuth tokens programmatically, without the user having to visit Twitter.com
+    -Improved control over request caching
+    -Fixed cursor paging
 
 
 
