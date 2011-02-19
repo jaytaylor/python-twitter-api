@@ -1,3 +1,8 @@
-File created on 2011-02-19
+This project is a fork of http://code.google.com/p/python-twitter/, which improvements and enhancements.
 
-< coming soon hopefully >
+Features:
+    -Automatically retrieve OAuth tokens programmatically, without the user having to visit Twitter.com.
+
+
+
+This file was first created on 2011-02-19
