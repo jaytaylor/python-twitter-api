@@ -2653,16 +2653,16 @@ class Api(object):
             A twitter.Status instance representing the message posted.
         '''
         if not self._oauth_consumer:
-            raise TwitterError("The twitter.Api instance must be authenticated.")
+            raise TwitterError('The twitter.Api instance must be authenticated.')
         url = '%s/statuses/update.json' % self.base_url
         if isinstance(status, unicode) or self._input_encoding is None:
             u_status = status
         else:
             u_status = unicode(status, self._input_encoding)
         if len(u_status) > CHARACTER_LIMIT:
-            raise TwitterError("Text must be less than or equal to %d characters. "
-                                                 "Consider using postUpdates." % CHARACTER_LIMIT)
-        data = {'status': status}
+            raise TwitterError('Text must be less than or equal to %d characters. '
+                'Consider using the postUpdates() method instead' % CHARACTER_LIMIT)
+        data = {'status': u_status.encode('utf-8')}
         if in_reply_to_status_id:
             data['in_reply_to_status_id'] = in_reply_to_status_id
         json = self._fetchUrl(url, post_data=data, **kw)
