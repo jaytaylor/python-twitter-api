@@ -118,26 +118,27 @@ class Status(object):
 
     The Status structure exposes the following properties:
 
-      status.created_at
-      status.created_at_in_seconds # read only
-      status.favorited
-      status.in_reply_to_screen_name
-      status.in_reply_to_user_id
-      status.in_reply_to_status_id
-      status.truncated
-      status.source
-      status.id
-      status.text
-      status.location
-      status.relative_created_at # read only
-      status.user
-      status.urls
-      status.user_mentions
-      status.hashtags
-      status.geo
-      status.place
-      status.coordinates
-      status.contributors
+        status.created_at
+        status.created_at_in_seconds # read only
+        status.favorited
+        status.in_reply_to_screen_name
+        status.in_reply_to_user_id
+        status.in_reply_to_status_id
+        status.truncated
+        status.source
+        status.id
+        status.text
+        status.location
+        status.relative_created_at # read only
+        status.user
+        status.urls
+        status.user_mentions
+        status.hashtags
+        status.geo
+        status.place
+        status.coordinates
+        status.contributors
+        status.retweeted_status
     '''
     def __init__(self,
         created_at=None,
@@ -158,8 +159,10 @@ class Status(object):
         geo=None,
         place=None,
         coordinates=None,
-        contributors=None):
-        '''An object to hold a Twitter status message.
+        contributors=None,
+        retweeted_status=None):
+        '''
+        An object to hold a Twitter status message.
 
         This class is normally instantiated by the twitter.Api class and
         returned in a sequence.
@@ -167,24 +170,44 @@ class Status(object):
         Note: Dates are posted in the form "Sat Jan 27 04:17:38 +0000 2007"
 
         Args:
-          created_at:
-            The time this status message was posted. [Optional]
-          favorited:
-            Whether this is a favorite of the authenticated user. [Optional]
-          id:
-            The unique id of this status message. [Optional]
-          text:
-            The text of this status message. [Optional]
-          location:
-            the geolocation string associated with this message. [Optional]
-          relative_created_at:
-            A human readable string representing the posting time. [Optional]
-          user:
-            A twitter.User instance representing the person posting the
-            message. [Optional]
-          now:
-            The current time, if the client choses to set it.
-            Defaults to the wall clock time. [Optional]
+            created_at:
+                The time this status message was posted. [Optional]
+            favorited:
+                Whether this is a favorite of the authenticated user. [Optional]
+            id:
+                The unique id of this status message. [Optional]
+            text:
+                The text of this status message. [Optional]
+            location:
+                the geolocation string associated with this message. [Optional]
+            relative_created_at:
+                A human readable string representing the posting time. [Optional]
+            user:
+                A twitter.User instance representing the person posting the
+                message. [Optional]
+            now:
+                The current time, if the client choses to set it.
+                Defaults to the wall clock time. [Optional]
+            urls:
+                -description
+            user_mentions:
+                -description
+            hashtags:
+                -description
+            geo:
+                -description
+            place:
+                -description
+            coordinates:
+                -description
+            contributors:
+                -description
+            retweeted_status:
+                Feb 2011 - Twitter now supports "retweeted_status" field in
+                "Status" objects.
+                With this support, it becomes possible to retrieve full text of
+                a retweeted message, even if it is longer than 140 characters in
+                legacy "text" field.
         '''
         self.created_at = created_at
         self.favorited = favorited
@@ -205,6 +228,7 @@ class Status(object):
         self.place = place
         self.coordinates = coordinates
         self.contributors = contributors
+        self.retweeted_status = retweeted_status
 
     def getCreatedAt(self):
         '''
@@ -590,6 +614,9 @@ class Status(object):
         urls = None
         user_mentions = None
         hashtags = None
+        retweeted_status = None
+        if 'retweeted_status' in data:
+            retweeted_status = Status.NewFromJsonDict(data['retweeted_status'])
         if 'entities' in data:
             if 'urls' in data['entities']:
                 urls = [Url.newFromJsonDict(u) for u in data['entities']['urls']]
@@ -614,7 +641,8 @@ class Status(object):
             geo=data.get('geo', None),
             place=data.get('place', None),
             coordinates=data.get('coordinates', None),
-            contributors=data.get('contributors', None))
+            contributors=data.get('contributors', None),
+            retweeted_status=retweeted_status)
 
 
 class User(object):
