@@ -3606,16 +3606,18 @@ class Api(object):
         rate_status = self.getRateLimitStatus()
         reset_time  = rate_status.get('reset_time', None)
         limit       = rate_status.get('remaining_hits', None)
-        if reset_time and limit:
+        if reset_time:
             # Put the reset time into a datetime object.
             reset = datetime.datetime(*rfc822.parsedate(reset_time)[:7])
             # Find the difference in time between now and the reset time + 1 hour.
             delta = reset + datetime.timedelta(hours=1) - datetime.datetime.utcnow()
+            if not limit:
+                return delta
             # Determine the minimum number of seconds allowed as a regular interval.
-            max_frequency = int(delta.seconds / limit)
+            max_frequency = int(delta.seconds / limit) + 1
             # Return the number of seconds.
             return max_frequency
-        return 0
+        return 60
 
     def _buildUrl(self, url, path_elements=None, extra_params=None):
         # Break url into consituent parts.
