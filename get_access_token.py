@@ -65,19 +65,41 @@ def login(username, password):
 def set_profile_img(username, password, image_url):
     settings_url = 'http://twitter.com/settings/profile'
     br = login(username, password)
+    br.open(settings_url[0:settings_url.rfind('/') + 1] + 'account')
     br.open(settings_url)
-    br.select_form(nr=0)
-    nr = 1
-    while len(br.form.controls) < 2:
-        br.select_form(nr=nr)
-        nr += 1
+    forms = [form for form in br.forms()]
+    for i in range(len(forms)):
+        br.select_form(nr=i)
+        if br.form.attrs.get('id', '') == 'delete_profile_picture_form':
+            # Submit profile image deletion request.
+            print 'Attempting to delete existing profile image..'
+            br.submit().get_data()
+            print 'Existing profile image deletion was successful'
+            br.open(settings_url[0:settings_url.rfind('/') + 1] + 'account')
+            br.open(settings_url)
+
+    found_upload_form = False
+    for i in range(len(forms)):
+        br.select_form(nr=i)
+        #print br.form.action, br.form.attrs.get('id')
+        if br.form.attrs.get('id', '') == 'profile_form':
+            found_upload_form = True
+            break
+    if not found_upload_form:
+        #br.form.new_control Blah this would be a fair amount of work even if I could generate the hash check included as a hidden variable in the form.
+        raise Exception('I could not find the upload form.  Profile image update fails.')
+
+#    nr = 1
+#    while len(br.form.controls) < 2:
+#        br.select_form(nr=nr)
+#        nr += 1
     #print br.form
     #br.form['profile_image[uploaded_data]'] = image_url[image_url.rindex('/'):]
     urllib2.install_opener(wget_opener(settings_url))
     print 'setting profile image to %s' % image_url
     br.form.add_file(urllib2.urlopen(image_url), 'image/jpg', '%s.jpg' % image_url[image_url.rindex('/'):], **{'name': 'profile_image[uploaded_data]'})
     #br.form.add_file(open('test.jpg'), 'image/jpg', 'test.jpg', **{'name': 'profile_image[uploaded_data]'})
-    br.submit().get_data()
+    return br.submit().get_data()
 
 def get_twitter_pin(username, password, url):
     br = mechanize.Browser()
