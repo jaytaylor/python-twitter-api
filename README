@@ -3,8 +3,7 @@ This project is a fork of http://code.google.com/p/python-twitter/, which improv
 Features:
     -Automatically retrieve OAuth tokens programmatically, without the user having to visit Twitter.com
     -Improved control over request caching
-    -Fixed cursor paging
-
+    -Fixed cursor paging (though for now you'd have to use the poorly/confusingly named TwitterCache class to easily take advantage of full query sets)
 
 
 This file was first created on 2011-02-19
