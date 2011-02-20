@@ -138,6 +138,7 @@ class Status(object):
         status.place
         status.coordinates
         status.contributors
+        status.retweeted
         status.retweeted_status
     '''
     def __init__(self,
@@ -160,6 +161,7 @@ class Status(object):
         place=None,
         coordinates=None,
         contributors=None,
+        retweeted=None,
         retweeted_status=None):
         '''
         An object to hold a Twitter status message.
@@ -202,6 +204,8 @@ class Status(object):
                 -description
             contributors:
                 -description
+            retweeted:
+                -description
             retweeted_status:
                 Feb 2011 - Twitter now supports "retweeted_status" field in
                 "Status" objects.
@@ -220,6 +224,7 @@ class Status(object):
         self.in_reply_to_user_id = in_reply_to_user_id
         self.in_reply_to_status_id = in_reply_to_status_id
         self.truncated = truncated
+        self.retweeted = retweeted
         self.source = source
         self.urls = urls
         self.user_mentions = user_mentions
@@ -341,6 +346,14 @@ class Status(object):
         self._truncated = truncated
 
     truncated = property(getTruncated, setTruncated, doc='')
+
+    def getRetweeted(self):
+        return self._retweeted
+
+    def setRetweeted(self, retweeted):
+        self._retweeted = retweeted
+
+    retweeted = property(getRetweeted, setRetweeted, doc='')
 
     def getSource(self):
         return self._source
@@ -505,7 +518,15 @@ class Status(object):
     def setContributors(self, contributors):
         self._contributors = contributors
 
-    contributors = property(getContributors, setContributors,
+    contributors = property(getContributors, setContributors, doc='')
+
+    def getRetweetedStatus(self):
+        return self._retweeted_status
+
+    def setRetweetedStatus(self, retweeted_status):
+        self._retweeted_status = retweeted_status
+
+    retweeted_status = property(getRetweetedStatus, setRetweetedStatus,
         doc='')
 
     def __ne__(self, other):
@@ -523,12 +544,14 @@ class Status(object):
                 self.in_reply_to_user_id == other.in_reply_to_user_id and \
                 self.in_reply_to_status_id == other.in_reply_to_status_id and \
                 self.truncated == other.truncated and \
+                self.retweeted == other.retweeted and \
                 self.favorited == other.favorited and \
                 self.source == other.source and \
                 self.geo == other.geo and \
                 self.place == other.place and \
                 self.coordinates == other.coordinates and \
-                self.contributors == other.contributors
+                self.contributors == other.contributors and \
+                self.retweeted_status == other.retweeted_status
         except AttributeError:
             return False
 
@@ -582,6 +605,8 @@ class Status(object):
             data['in_reply_to_status_id'] = self.in_reply_to_status_id
         if self.truncated is not None:
             data['truncated'] = self.truncated
+        if self.retweeted is not None:
+            data['retweeted'] = self.retweeted
         if self.favorited is not None:
             data['favorited'] = self.favorited
         if self.source:
@@ -594,6 +619,10 @@ class Status(object):
             data['coordinates'] = self.coordinates
         if self.contributors:
             data['contributors'] = self.contributors
+        if self.hashtags:
+            data['hashtags'] = [h.text for h in self.hashtags]
+        if self.retweeted_status:
+            data['retweeted_status'] = self.retweeted_status.AsDict()
         return data
 
     @staticmethod
@@ -614,9 +643,10 @@ class Status(object):
         urls = None
         user_mentions = None
         hashtags = None
-        retweeted_status = None
         if 'retweeted_status' in data:
             retweeted_status = Status.newFromJsonDict(data['retweeted_status'])
+        else:
+            retweeted_status = None
         if 'entities' in data:
             if 'urls' in data['entities']:
                 urls = [Url.newFromJsonDict(u) for u in data['entities']['urls']]
@@ -633,6 +663,7 @@ class Status(object):
             in_reply_to_user_id=data.get('in_reply_to_user_id', None),
             in_reply_to_status_id=data.get('in_reply_to_status_id', None),
             truncated=data.get('truncated', None),
+            retweeted=data.get('retweeted', None),
             source=data.get('source', None),
             user=user,
             urls=urls,
