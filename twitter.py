@@ -616,7 +616,7 @@ class Status(object):
         hashtags = None
         retweeted_status = None
         if 'retweeted_status' in data:
-            retweeted_status = Status.NewFromJsonDict(data['retweeted_status'])
+            retweeted_status = Status.newFromJsonDict(data['retweeted_status'])
         if 'entities' in data:
             if 'urls' in data['entities']:
                 urls = [Url.newFromJsonDict(u) for u in data['entities']['urls']]
@@ -2691,7 +2691,7 @@ class Api(object):
         json = self._FetchUrl(url, parameters=parameters)
         data = simplejson.loads(json)
         self._CheckForTwitterError(data)
-        return [Status.NewFromJsonDict(x) for x in data]
+        return [Status.newFromJsonDict(x) for x in data]
 
     def destroyStatus(self, id, **kw):
         '''
@@ -2774,7 +2774,7 @@ class Api(object):
         json = self._FetchUrl(url, post_data={'':None})
         data = simplejson.loads(json)
         self._CheckForTwitterError(data)
-        return Status.NewFromJsonDict(data)
+        return Status.newFromJsonDict(data)
 
     def postUpdates(self, status, continuation=None, **kw):
         '''
