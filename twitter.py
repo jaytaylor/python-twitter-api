@@ -3748,7 +3748,7 @@ class Api(object):
             # Find the difference in time between now and the reset time + 1 hour.
             delta = reset + datetime.timedelta(hours=1) - datetime.datetime.utcnow()
             if not limit:
-                return delta
+                return int(delta.seconds)
             # Determine the minimum number of seconds allowed as a regular interval.
             max_frequency = int(delta.seconds / limit) + 1
             # Return the number of seconds.
