@@ -1,4 +1,7 @@
-This project is a fork of http://code.google.com/p/python-twitter/, which improvements and enhancements.
+Update: 2012-04-30 I don't have time to maintain this separate fork anymore.  I will leave it available but if you have problems I would suggest using the python-twitter library from google code.
+
+
+This project is a fork of http://code.google.com/p/python-twitter/, with improvements and enhancements.
 
 Features:
     -Automatically retrieve OAuth tokens programmatically, without the user having to visit Twitter.com
